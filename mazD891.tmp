@@ -49,3 +49,8 @@ theme_override_styles/focus = ExtResource("2_jcd8a")
 expand_icon = true
 script = ExtResource("2_gbony")
 metadata/_edit_use_anchors_ = true
+
+[node name="Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)

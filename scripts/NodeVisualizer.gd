@@ -3,13 +3,15 @@ extends Node2D
 var circle_radius : int = 4
 var nodes = []
 var edges = []
-var m = 12  #Number of rows
-var n = 22  #Number of columns
+var m = 12  #Number of rows, 12
+var n = 22 #Number of columns, 22
 
 
 var graph
 var parent = []
 var rank = []
+
+var id_to_node = {}
 
 
 func _ready():
@@ -29,6 +31,8 @@ func _ready():
 			pos = Vector2(pos.x + 50, pos.y)
 			temp.position = pos
 			temp.id = id
+			
+			id_to_node[id] = temp
 			id += 1
 		pos.x = 0
 		pos.y += 50
@@ -114,4 +118,78 @@ func find(node):
 func path_exists(node_a, node_b):
 	return find(node_a).equals(find(node_b))
 	
+func get_path_from_to(u, v) -> Array:
+	return []
 	
+func extract_nodeid_in_component(u) -> Array:
+	var nodes = []
+	var parent_of_u = parent[u.id]
+	for i in range(parent.size()):
+		if parent[i].equals(parent_of_u):
+			nodes.append(i)
+	return nodes
+	
+#edges are returned as the id of the nodes, so not [node_ref1, node_ref2] but [node_id1, node_id2]
+func extract_edges_in_component(u, node_ids) -> Array:
+	var edges = []
+	for node_id in node_ids:
+		for j in range(m*n+1):
+			if(graph[node_id][j] != 0):
+				edges.append(Vector2(node_id, j))
+				edges.append(Vector2(j, node_id))
+	return edges
+	
+func dfs_path(subgraph, nodes, s, t) -> Array:
+	var stack =[[s, [s]]]
+	var visited = {}
+	for i in range(m*n+1):
+		visited[i] = false
+	while !stack.is_empty():
+		var pop = stack.pop_front()  # Pop the top node and the path to reach it
+		var node = pop[0]
+		var path = pop[1]
+		if node==t:
+			return path # If node is the target, return the path
+		if visited[node]:
+			continue  # Skip visited nodes
+		visited[node] = true  # Mark the node as visited
+		for i in range(m*n+1):
+			if subgraph[node][i] != 0 && visited[i] == false:
+				var new_path = path.duplicate()
+				new_path.append(i)
+				stack.push_front([i, new_path]) # Push neighbor and updated path onto the stack
+	return []  # Return None if no path is found
+
+func bfs_path(graph, start, goal):
+	var queue = []
+	var visited = {}
+	var predecessors = {}
+	for i in range(m*n+1):
+		visited[i] = false
+	queue.append(start)
+	visited[start] = true
+	predecessors[start] = null
+	while queue.size() > 0:
+		var current = queue.pop_front()
+		
+		if current == goal:
+			return reconstruct_path(predecessors, start, goal)
+		
+		for i in range(m*n + 1):
+			if graph[current][i] != 0 && visited[i] == false:
+				queue.append(i)
+				visited[i] = true
+				predecessors[i] = current
+	
+	return []
+
+func reconstruct_path(predecessors, start, goal):
+	var path = []
+	var current = goal
+	
+	while current != null:
+		path.append(current)
+		current = predecessors[current]
+	
+	path.reverse()
+	return path
