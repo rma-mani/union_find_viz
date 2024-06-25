@@ -26,9 +26,9 @@ func button_toggled(button: Button, pressed: bool):
 	if(pressed_buttons.size() == 2):
 		var u = pressed_buttons[0].get_parent().get_parent()
 		var v = pressed_buttons[1].get_parent().get_parent()
-		print(str(num_toggled) + ". " + str(node_visualizer.path_exists(u, v)))
+
 		var node_ids_in_component = node_visualizer.extract_nodeid_in_component(u)
-		print("parent of u: " + str(node_visualizer.parent[u.id].id))
+
 		var edges_in_component = node_visualizer.extract_edges_in_component(u, node_ids_in_component)
 
 		var m = node_visualizer.m
@@ -36,7 +36,7 @@ func button_toggled(button: Button, pressed: bool):
 		var subgraph = node_visualizer.create_matrix(m*n + 1,m*n + 1)
 		for edge in edges_in_component:
 			subgraph[edge.x][edge.y] = 1
-		print(edges_in_component)
+			subgraph[edge.y][edge.x] = 1
 		var path = node_visualizer.dfs_path(subgraph, node_ids_in_component, u.id, v.id)		
 		var bfs_path = node_visualizer.bfs_path(subgraph, u.id, v.id)
 		s_t_path = bfs_path

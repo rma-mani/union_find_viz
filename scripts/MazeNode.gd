@@ -11,6 +11,7 @@ func visualize(node):
 	var default_font = ThemeDB.fallback_font
 	var default_font_size = ThemeDB.fallback_font_size	
 	# here turn label on and off
+	# ↓
 	#node.draw_string(default_font, text_position, str(id),  HORIZONTAL_ALIGNMENT_LEFT, -1, default_font_size-3, Color(1, 0, 0))
 
 	if(is_hovering):

@@ -100,12 +100,14 @@ func union(node_a, node_b):
 	
 	if(absolute_parent_of_node_a.equals(absolute_parent_of_node_b)):
 		return
+	
 	if(rank[absolute_parent_of_node_a.id] < rank[absolute_parent_of_node_b.id]):
 		parent[absolute_parent_of_node_a.id] = absolute_parent_of_node_b
+	elif(rank[absolute_parent_of_node_a.id] > rank[absolute_parent_of_node_b.id] ):
+		parent[absolute_parent_of_node_b.id] = absolute_parent_of_node_a
 	else:
 		parent[absolute_parent_of_node_b.id] = absolute_parent_of_node_a
 		rank[absolute_parent_of_node_a.id]+=1
-	pass
 	
 # find absolute parent of node
 func find(node):
@@ -136,7 +138,8 @@ func extract_edges_in_component(u, node_ids) -> Array:
 		for j in range(m*n+1):
 			if(graph[node_id][j] != 0):
 				edges.append(Vector2(node_id, j))
-				edges.append(Vector2(j, node_id))
+				if(!node_ids.has(j)):
+					node_ids.append(j)
 	return edges
 	
 func dfs_path(subgraph, nodes, s, t) -> Array:
@@ -170,8 +173,8 @@ func bfs_path(graph, start, goal):
 	visited[start] = true
 	predecessors[start] = null
 	while queue.size() > 0:
+		#print(queue)
 		var current = queue.pop_front()
-		
 		if current == goal:
 			return reconstruct_path(predecessors, start, goal)
 		
@@ -180,7 +183,6 @@ func bfs_path(graph, start, goal):
 				queue.append(i)
 				visited[i] = true
 				predecessors[i] = current
-	
 	return []
 
 func reconstruct_path(predecessors, start, goal):
