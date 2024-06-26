@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 NodeManager="*res://scripts/NodeManager.gd"
 
+[display]
+
+window/subwindows/embed_subwindows=false
+
 [rendering]
 
 renderer/rendering_method.mobile="forward_plus"

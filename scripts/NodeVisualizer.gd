@@ -18,7 +18,6 @@ func _ready():
 	var id : int = 0
 	var pos : Vector2 = Vector2(0, 50)
 	
-	
 	graph = create_matrix(m*n + 1,m*n + 1)
 	for i in range(m):
 		for j in range(n):
@@ -82,9 +81,10 @@ func create_random_adjacent_edges():
 		index+=1
 
 func _draw():
-	for node in nodes:
-		node.visualize(self)
-		
+	if(!nodes.is_empty()):
+		for node in nodes:
+			node.visualize(self)
+			
 func create_matrix(m, n):
 	var matrix = []
 	for i in range(m):
@@ -195,3 +195,21 @@ func reconstruct_path(predecessors, start, goal):
 	
 	path.reverse()
 	return path
+
+
+func _on_reset_graph_pressed():
+	graph = []
+	edges = []
+	parent = []
+	rank = []
+	id_to_node = {}
+	
+	var children = get_children()
+	for child in children:
+		var grandchildren = child.get_children()
+		if(grandchildren[0] is StaticBody2D || child is Window):
+			continue
+		else:
+			self.remove_child(child)
+	queue_redraw()
+	_ready()

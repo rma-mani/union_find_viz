@@ -50,7 +50,7 @@ func _draw():
 			var to_node = s_t_path[i + 1]
 			var from_pos = node_visualizer.id_to_node[from_node].position
 			var to_pos = node_visualizer.id_to_node[to_node].position
-			draw_line(from_pos, to_pos, Color(0, 1, 0), 5) 
+			draw_line(from_pos, to_pos, Color(0, 1, 0), 9) 
 
 func clear_console():
 	for i in range(100):
